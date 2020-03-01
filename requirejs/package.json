@@ -1,0 +1,24 @@
+{
+  "name": "web_erd",
+  "version": "1.0.0",
+  "description": "GUI Database ERD on WEB",
+  "main": "build.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://app.myhome.st:53010/development/web_erd.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "almond": "^0.3.3",
+    "amdclean": "^2.7.0",
+    "grunt": "^1.0.4",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-requirejs": "^1.0.0",
+    "grunt-contrib-uglify": "^4.0.1"
+  },
+  "devDependencies": {}
+}

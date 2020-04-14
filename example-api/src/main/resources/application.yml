@@ -1,0 +1,32 @@
+spring:
+  profiles:
+    active:
+    - default
+    - dev
+    - local
+
+logging:
+  level:
+    root: warn
+    dev.kirin.example: debug
+    
+--- #default
+spring:
+  profiles:
+  - default
+  - dev
+
+--- #test
+spring:
+  profiles:
+  - test
+
+--- #prod
+spring:
+  profiles:
+  - prod
+  
+logging:
+  level:
+    root: warn
+    dev.kirin.example: info

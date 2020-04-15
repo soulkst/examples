@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Header {
+class Header {
 	@JsonProperty(value = "alg")
 	private Algorithm algorithm;
 	@JsonProperty(value = "typ")

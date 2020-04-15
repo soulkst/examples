@@ -1,14 +1,14 @@
 package dev.kirin.example.api.helper.jwt;
 
-import java.util.Date;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @AllArgsConstructor
@@ -31,11 +31,12 @@ public class BasePayload {
 	private String issuer;
 	
 	@JsonProperty(value = "exp")
-	private Date expireAt;
+	@Setter(value = AccessLevel.PACKAGE)
+	private Long expireAt;
 	
 	@JsonProperty(value = "nbf")
 	@JsonInclude(value = Include.NON_NULL)
-	private Long notBeforeAt;
+	private Integer notBeforeAt;
 	
 	@JsonProperty(value = "iat")
 	@JsonInclude(value = Include.NON_NULL)

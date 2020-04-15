@@ -6,4 +6,10 @@ public interface JwtConfig {
 	Algorithm getAlgorithm();
 	String getType();
 	String getIssuer();
+	
+	TimeUnit getExpireUnit();
+	int getExpireTime();
+	
+	TimeUnit getNotBeforeAtUnit();
+	int getNotBeforeTime();
 }

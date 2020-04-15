@@ -3,59 +3,52 @@ package dev.kirin.example.api.helper.jwt;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import javax.validation.constraints.NotNull;
-
-import org.apache.commons.codec.binary.Base64;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import dev.kirin.example.api.helper.jwt.util.StringUtil;
+import dev.kirin.example.api.helper.jwt.util.TimeUtil;
 import lombok.NonNull;
 
 public class JwtSigner extends JwtProcessor {
-	private String header;
-	private String claim;
-	
-	private Algorithm alg;
-	
-	public JwtSigner withHeader(@NonNull JwtConfig config) throws JWTSignFailureException {
-		return withHeader(new Header(config.getAlgorithm(), config.getType()));
+	private boolean isNbfEnable = false;
+
+	protected JwtSigner(@NonNull final JwtConfig config) {
+		super(config);
 	}
 	
-	public JwtSigner withHeader(@NotNull Algorithm alg, String type) throws JWTSignFailureException {
-		return withHeader(new Header(alg, type));
-	}
-	
-	public JwtSigner withHeader(@NotNull Algorithm alg) throws JWTSignFailureException {
-		return withHeader(new Header(alg, JwtConfig.TYPE_JWT));
-	}
-	
-	public JwtSigner withHeader(@NotNull Header header) throws JWTSignFailureException {
-		try {
-			this.alg = header.getAlgorithm();
-			this.header = Base64.encodeBase64URLSafeString(mapper.writeValueAsBytes(header));
-		} catch (JsonProcessingException e) {
-			throw new JWTSignFailureException("Cannot convert 'header' to json.");
-		}
+	public JwtSigner withEnableNotBeforeAt() {
+		isNbfEnable = true;
 		return this;
 	}
 	
 	public <T extends BasePayload> String sign(@NonNull T payload, @NonNull String secret) throws JWTSignFailureException {
 		try {
-			if(header == null || "".equals(header)) {
-				throw new JWTSignFailureException("'Header' is not setted.");
-			}
+			String header = base64Encode(mapper.writeValueAsBytes(
+					new Header(getConfig().getAlgorithm(), StringUtil.isEmpty(getConfig().getType(), JwtConfig.TYPE_JWT)
+					)));
+			
+			long now = TimeUtil.now();
 			
 			if(payload.getIssuedAt() == null) {
-				payload.setIssuedAt(System.currentTimeMillis());
+				payload.setIssuedAt(now);
 			}
 			
-			this.claim = Base64.encodeBase64URLSafeString(mapper.writeValueAsBytes(payload));
+			payload.setExpireAt(TimeUtil.after(now, getConfig().getExpireUnit().getValue(), getConfig().getExpireTime()));
 			
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(header).append(DELIMETER).append(claim);
-			String signature = getEncodedSignature(alg, secret, buffer.toString());
-			buffer.append(DELIMETER).append(signature);
-			return buffer.toString();
+			if(isNbfEnable) {
+				payload.setNotBeforeAt((int) TimeUtil.after(now, getConfig().getNotBeforeAtUnit().getValue(), getConfig().getNotBeforeTime()));
+			}
+			
+			if(!StringUtil.isEmpty(getConfig().getIssuer())) {
+				payload.setIssuer(getConfig().getIssuer());
+			}
+			
+			String claim = base64Encode(mapper.writeValueAsBytes(payload));
+			
+			String headerAndClaim = StringUtil.concat(header, DELIMETER, claim);
+			String signature = getEncodedSignature(getConfig().getAlgorithm(), secret, headerAndClaim);
+			
+			return StringUtil.concat(headerAndClaim, DELIMETER, signature);
 		} catch (InvalidKeyException | IllegalStateException | NoSuchAlgorithmException | JsonProcessingException e) {
 			throw new JWTSignFailureException("Cannot make token.", e);
 		}

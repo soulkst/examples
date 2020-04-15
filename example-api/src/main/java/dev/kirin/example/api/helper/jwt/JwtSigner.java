@@ -12,7 +12,7 @@ import lombok.NonNull;
 public class JwtSigner extends JwtProcessor {
 	private boolean isNbfEnable = false;
 
-	protected JwtSigner(@NonNull final JwtConfig config) {
+	public JwtSigner(@NonNull final JwtConfig config) {
 		super(config);
 	}
 	

@@ -16,6 +16,17 @@ spring:
   - default
   - dev
 
+jwt:
+  # support only hs512, hs384, hs256
+  algorithm: hs512
+  secret: 1234
+  expire:
+    # unit : second, min, hour, day, month, year
+    unit: 1
+    # time value. if you want set 1 day, set 1
+    time: second
+  issuer: test-iss
+  
 --- #test
 spring:
   profiles:

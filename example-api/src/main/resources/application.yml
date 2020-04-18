@@ -5,32 +5,73 @@ spring:
     - dev
     - local
 
-logging:
-  level:
-    root: warn
-    dev.kirin.example: debug
-    
 --- #default
 spring:
   profiles:
   - default
   - dev
 
+
+data_enc:
+  salt: abcedfg
+  digest:
+    type: sha256
+    secret: mpu&?CC?5]\U}]EK]IX?qZFO
+  aes:
+    type: 256
+    secret: Xe5bo5CB*b!RB9L_sSTpXiJ
+  rsa:
+    private_key:
+    public_key:
+    
+  
 jwt:
   # support only hs512, hs384, hs256
   algorithm: hs512
-  secret: 1234
+  secret: KfLEmQQghmqCd1{zQ]p
   expire:
     # unit : second, min, hour, day, month, year
     unit: 1
     # time value. if you want set 1 day, set 1
     time: second
   issuer: test-iss
-  
+
+logging:
+  level:
+    root: warn
+    dev.kirin.example: debug
 --- #test
 spring:
   profiles:
   - test
+
+jwt:
+  # support only hs512, hs384, hs256
+  algorithm: hs512
+  secret: KfLEmQQghmqCd1{zQ]p
+  expire:
+    # unit : second, min, hour, day, month, year
+    unit: 1
+    # time value. if you want set 1 day, set 1
+    time: second
+  issuer: test-iss
+
+logging:
+  level:
+    root: warn
+    dev.kirin.example: debug
+    
+data_enc:
+  salt: abcedfg
+  digest:
+    type: sha256
+    secret: mpu&?CC?5]\U}]EK]IX?qZFO
+  aes:
+    type: 256
+    secret: Xe5bo5CB*b!RB9L_sSTpXiJ
+  rsa:
+    private_key:
+    public_key:
 
 --- #prod
 spring:

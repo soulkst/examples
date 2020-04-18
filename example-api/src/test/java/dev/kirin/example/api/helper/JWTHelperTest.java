@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import dev.kirin.example.api.helper.jwt.BasePayload;
@@ -14,7 +13,6 @@ import dev.kirin.example.api.helper.jwt.JwtVerify.JWTVerifyError;
 import lombok.extern.slf4j.Slf4j;
 
 @ExtendWith(SpringExtension.class)
-@ActiveProfiles("default")
 @SpringBootTest
 @Slf4j
 public class JWTHelperTest {
